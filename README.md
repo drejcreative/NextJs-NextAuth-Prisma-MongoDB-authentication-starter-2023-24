@@ -1,1 +1,1 @@
-# next-js-authentification
+# next-js-authentication
