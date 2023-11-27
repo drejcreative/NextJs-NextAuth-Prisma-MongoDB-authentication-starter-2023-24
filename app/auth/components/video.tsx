@@ -1,0 +1,24 @@
+import React from 'react';
+
+const Video = () => {
+  return (
+    <div hidden className="fixed inset-0 w-7/12 lg:block">
+      <span className="absolute bottom-6 left-6 text-sm">
+        Video by MART PRODUCTION from
+        <a href="https://www.pexels.com/" target="blank" title="Pexels">
+          Pexels
+        </a>
+      </span>
+      <video
+        className="h-full w-full object-cover"
+        loop
+        autoPlay
+        muted
+        src="video/video.mp4"
+        poster="images/back.jpg"
+      ></video>
+    </div>
+  );
+};
+
+export default Video;
