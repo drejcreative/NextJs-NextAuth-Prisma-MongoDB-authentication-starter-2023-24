@@ -5,7 +5,7 @@ This repository serves as a comprehensive boilerplate for building scalable, mod
 
 ## Features
 
-- **Next.js 13**: The latest version of the React framework for production-grade React applications.
+- **Next.js 14**: The latest version of the React framework for production-grade React applications.
 - **React**: A JavaScript library for building user interfaces with a focus on declarative and component-based development.
 - **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
 - **Prisma**: Next-generation ORM for Node.js and TypeScript, providing a clean and type-safe API for interacting with your database.

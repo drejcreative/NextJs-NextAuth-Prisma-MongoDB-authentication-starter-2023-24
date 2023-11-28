@@ -7,8 +7,6 @@ import SocialLogin from './components/SocialLogin';
 import Divider from './components/Divider';
 import Input from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useSession } from 'next-auth/react';
-
 import { emailValidation, nameValidation, passwordValidation } from './validation/validation';
 import Loading from '@/components/ui/Loading';
 import { useAuth } from './hooks/useAuth';
@@ -23,9 +21,6 @@ type Variant = VARIANTS.login | VARIANTS.register;
 const Auth = () => {
   const [variant, setVariant] = useState<Variant>(VARIANTS.login);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
-  const session = useSession();
-  console.log('session, ', session);
 
   const changeVariant = useCallback(() => {
     clearErrors();
@@ -67,7 +62,7 @@ const Auth = () => {
 
   return (
     <>
-      <SocialLogin onClick={socialActions} loading={loading} />
+      <SocialLogin />
       <Divider />
       <form action="" onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-6">
         {!isLogin() && (
@@ -96,7 +91,7 @@ const Auth = () => {
             type={showPassword ? 'text' : 'password'}
             id="password"
             errors={errors}
-            validation={passwordValidation}
+            validation={!isLogin() ? passwordValidation : {}}
           />
 
           {!showPassword ? (
