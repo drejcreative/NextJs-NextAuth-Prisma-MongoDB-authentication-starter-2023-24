@@ -1,6 +1,7 @@
 # Next.js 14 + React + Tailwind CSS + Prisma + MongoDB + NextAuth Basic Auth starter
 
 ![alt text](readme.gif 'Title')
+
 This repository serves as a comprehensive boilerplate for building scalable, modern web applications using a powerful stack that includes Next.js 13, React, Tailwind CSS, Prisma, MongoDB, and NextAuth. This setup is designed to kickstart your project with robust authentication, elegant styling, and a well-structured database model.
 
 ## Features
