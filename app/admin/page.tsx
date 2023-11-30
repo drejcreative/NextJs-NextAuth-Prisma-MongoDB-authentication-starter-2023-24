@@ -1,9 +1,23 @@
 'use client';
-import { Button } from '@/components/ui/button';
+import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 
-export default function Home() {
+import { Button } from '@/components/ui/button';
+import useAdminRoute from './hooks/useAdminRoute';
+import Loading from '@/components/ui/Loading';
+
+const AdminPage = () => {
+  const { loading } = useAdminRoute();
+  if (loading)
+    return (
+      <div className="fixed left-0 top-0 z-50 h-full w-full bg-white opacity-75">
+        <div className="mt-[50vh] flex items-center justify-center">
+          <Loading size={10} />
+        </div>
+      </div>
+    );
+
   return (
     <div>
       <nav className="border-gray-200 bg-white dark:bg-gray-900">
@@ -30,9 +44,9 @@ export default function Home() {
               <li>
                 <Link
                   className="block rounded bg-blue-700 px-3 py-2 text-white md:bg-transparent md:p-0 md:text-blue-700 md:dark:text-blue-500"
-                  href="/admin"
+                  href="/dashboard"
                 >
-                  Admin
+                  Protected
                 </Link>
               </li>
             </ul>
@@ -40,10 +54,12 @@ export default function Home() {
         </div>
       </nav>
       <div className="mt-5 flex w-full justify-center">
-        <h2 className="bg-gradient-to-r from-orange-400 to-blue-700 bg-clip-text text-3xl font-extrabold text-transparent">
-          You are on Protected page
+        <h2 className="bg-gradient-to-r from-purple-400 to-blue-700 bg-clip-text text-8xl font-extrabold text-transparent">
+          YOU ARE ADMIN
         </h2>
       </div>
     </div>
   );
-}
+};
+
+export default AdminPage;

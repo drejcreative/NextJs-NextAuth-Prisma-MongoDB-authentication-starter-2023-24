@@ -1,11 +1,15 @@
 import React from 'react';
 
-const Loading = () => {
+interface IProps {
+  size?: number;
+}
+
+const Loading = ({ size = 4 }: IProps) => {
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        className="mr-2 h-4 w-4 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+        className={`mr-2 h-${size} w-${size} animate-spin fill-blue-600 text-gray-200 dark:text-gray-600`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

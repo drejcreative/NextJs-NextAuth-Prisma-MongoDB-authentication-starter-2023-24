@@ -13,6 +13,15 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role: profile.role ?? 'user',
+        };
+      },
     }),
     FacebookProvider({
       clientId: process.env.FACEBOOK_CLIENT_ID as string,
@@ -47,6 +56,21 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token, user }) {
+      console.log({ session, token, user });
+      if (token.sub) {
+        const user = await prisma.user.findUnique({
+          where: { id: token.sub },
+        });
+        if (session.user && user) {
+          session.user.role = user.role;
+        }
+      }
+
+      return session;
+    },
+  },
   debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'jwt',

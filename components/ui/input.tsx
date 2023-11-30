@@ -21,8 +21,6 @@ const Input: React.FC<InputProps> = ({
   disabled,
   validation,
 }) => {
-  console.log(errors[id]);
-
   return (
     <div className="relative w-full">
       <input
