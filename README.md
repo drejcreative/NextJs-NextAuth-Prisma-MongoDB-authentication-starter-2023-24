@@ -70,10 +70,6 @@ For detailed instructions on how to use each component of this stack, please ref
 - [MongoDB Documentation](https://docs.mongodb.com/)
 - [NextAuth Documentation](https://next-auth.js.org/)
 
-## Contributing
-
-Contributions are always welcome! Please read the [contribution guidelines](CONTRIBUTING.md) first.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
