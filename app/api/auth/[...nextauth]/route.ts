@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import NextAuth, { AuthOptions } from 'next-auth';
+
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
@@ -58,7 +59,6 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async session({ session, token, user }) {
-      console.log({ session, token, user });
       if (token.sub) {
         const user = await prisma.user.findUnique({
           where: { id: token.sub },
