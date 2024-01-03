@@ -10,7 +10,7 @@ const Authentification = () => {
       <div className="m-auto h-screen 2xl:container">
         <Video />
         <Overlay />
-        <div className="relative ml-auto flex h-full  lg:w-6/12 ">
+        <div className="relative ml-auto flex h-full  lg:w-5/12 ">
           <div className="m-auto px-6 py-12 sm:p-20 xl:w-10/12">
             <Logo />
             <Auth />

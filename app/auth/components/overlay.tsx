@@ -5,7 +5,7 @@ const Overlay = () => {
     <div
       hidden
       role="hidden"
-      className="fixed inset-0 ml-auto w-6/12 bg-white bg-opacity-70 backdrop-blur-xl lg:block"
+      className="fixed inset-0 ml-auto w-6/12 bg-white bg-opacity-60 backdrop-blur-xl lg:block"
     ></div>
   );
 };
