@@ -9,7 +9,8 @@ const Logo = () => {
         <a href="">
           <img src="images/logo.svg" className="w-20" alt="logo" />
         </a>
-        <p className="text-lg font-medium text-gray-600">Welcome to tailus ! Login first</p>
+        <p className="text-lg font-medium text-gray-600">Welcome to AUTH BOILERPLATE</p>
+        <p>Login First!</p>
       </div>
     </FadeIn>
   );

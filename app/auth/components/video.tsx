@@ -3,10 +3,15 @@ import React from 'react';
 const Video = () => {
   return (
     <div hidden className="fixed inset-0 w-7/12 lg:block">
-      <span className="absolute bottom-6 left-6 text-sm">
-        Video by MART PRODUCTION from
-        <a href="https://www.pexels.com/" target="blank" title="Pexels">
-          Pexels
+      <span className="absolute bottom-6 left-6 z-10 text-sm text-white">
+        Created by
+        <a
+          href="https://www.dreittech.com/"
+          target="blank"
+          title="Pexels"
+          className="cursor-pointer"
+        >
+          DREIT TECHNOLOGIES
         </a>
       </span>
       <video

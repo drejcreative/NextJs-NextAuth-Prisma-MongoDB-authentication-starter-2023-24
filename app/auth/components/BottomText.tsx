@@ -8,7 +8,8 @@ const BottomText = () => {
       <div className="border-t pt-12">
         <div className="space-y-2 text-center">
           <span className="block text-sm tracking-wide text-gray-500">
-            Get +50 modern blocks for free next month.
+            This is comprehensive boilerplate for building scalable, modern web applications using a
+            powerful stack that includes Next.js 13, React, Tailwind CSS, Prisma, MongoDB
           </span>
         </div>
       </div>
