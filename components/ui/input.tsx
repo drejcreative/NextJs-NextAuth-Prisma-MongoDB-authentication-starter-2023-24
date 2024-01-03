@@ -75,20 +75,20 @@ const Input: React.FC<InputProps> = ({
         {label}
       </label>
       {errors[id] && errors[id]?.type === 'required' && (
-        <span className="absolute mx-2 mt-1 text-xs text-rose-500">{label} is required</span>
+        <div className="mt-1 text-xs leading-3 text-rose-500">{label} is required</div>
       )}
       {errors[id] && errors[id]?.type === 'maxLength' && (
-        <span className="absolute mx-2 mt-1 text-xs text-rose-500">Max length exceeded</span>
+        <div className="mt-1 text-xs leading-3 text-rose-500">Max length exceeded</div>
       )}
       {errors[id] && errors[id]?.type === 'pattern' && (
-        <span className=" mx-2 mt-1 text-xs text-rose-500">
+        <div className="mt-1 text-xs leading-3 text-rose-500">
           {errors[id]?.message || 'Wrong Pattern'}
-        </span>
+        </div>
       )}
       {errors[id] && errors[id]?.type === 'backend' && (
-        <span className="absolute mx-2 mt-1 text-xs text-rose-500">
+        <div className="mt-1 text-xs leading-3 text-rose-500">
           {errors[id]?.message || 'Server error'}
-        </span>
+        </div>
       )}
     </div>
   );

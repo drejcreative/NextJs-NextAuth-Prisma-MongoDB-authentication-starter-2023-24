@@ -4,7 +4,7 @@ const Video = () => {
   return (
     <div hidden className="fixed inset-0 w-7/12 lg:block">
       <span className="absolute bottom-6 left-6 z-10 text-sm text-white">
-      ©{new Date().getFullYear()} Created by
+        ©{new Date().getFullYear()} Created by
         <a
           href="https://www.dreittech.com/"
           target="blank"
