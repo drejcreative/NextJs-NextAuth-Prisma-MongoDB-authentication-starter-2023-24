@@ -32,8 +32,6 @@ const Auth = () => {
   const [showMessage, setShowMessage] = useState<IShowMessage | null>(null);
   const controls = useAnimation();
 
-  console.log('showMessage', showMessage);
-
   const slideOut = useCallback(async () => {
     await controls.start({ x: 500, opacity: 0, transition: { duration: 0.5 } });
   }, [controls]);
@@ -41,16 +39,6 @@ const Auth = () => {
   const slideIn = useCallback(() => {
     controls.start({ x: 0, opacity: 1, transition: { duration: 0.5 } });
   }, [controls]);
-
-  const changeVariant = useCallback(
-    async (variant: Variant) => {
-      clearErrors();
-      setShowMessage(null);
-      await slideOut();
-      setVariant(variant);
-    },
-    [slideOut],
-  );
 
   useEffect(() => {
     slideIn();
@@ -80,6 +68,16 @@ const Auth = () => {
     },
   });
 
+  const changeVariant = useCallback(
+    async (variant: Variant) => {
+      clearErrors();
+      setShowMessage(null);
+      await slideOut();
+      setVariant(variant);
+    },
+    [slideOut, clearErrors],
+  );
+
   const { loading, register: registerUser, signin, passwordReset } = useAuth(setError);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -107,6 +105,7 @@ const Auth = () => {
       <FadeIn delay={0.4} direction="left">
         <Divider />
       </FadeIn>
+
       <form action="" onSubmit={handleSubmit(onSubmit)} className="py-6">
         <FadeIn delay={0.8} direction="left">
           {isRegister() && (
@@ -120,6 +119,7 @@ const Auth = () => {
               validation={nameValidation}
             />
           )}
+
           <Input
             label="Email"
             register={register}
@@ -172,13 +172,12 @@ const Auth = () => {
                 </p>
               )}
 
-              <button
-                type="reset"
-                className="-mr-3 w-max p-3"
+              <span
+                className="-mr-3 w-max cursor-pointer p-3"
                 onClick={() => changeVariant(VARIANTS.reset)}
               >
                 <span className="text-sm tracking-wide text-blue-600">Forgot password ?</span>
-              </button>
+              </span>
             </div>
           )}
         </FadeIn>
