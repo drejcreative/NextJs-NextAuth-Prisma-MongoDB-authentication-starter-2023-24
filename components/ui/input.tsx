@@ -8,8 +8,9 @@ interface InputProps {
   type?: string;
   validation?: {};
   register: UseFormRegister<FieldValues>;
-  errors: FieldErrors;
+  errors: FieldErrors | any;
   disabled?: boolean;
+  className?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -20,9 +21,10 @@ const Input: React.FC<InputProps> = ({
   errors,
   disabled,
   validation,
+  className = '',
 }) => {
   return (
-    <div className="relative w-full">
+    <div className={`relative w-full ${className}`}>
       <input
         type={type}
         id={id}

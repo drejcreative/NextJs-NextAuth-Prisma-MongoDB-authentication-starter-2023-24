@@ -49,7 +49,9 @@ To get started with this boilerplate, follow these steps:
 
    - Copy `.env.example` to `.env` and fill in your database URL and authentication provider details.
 
-5. Run the development server:
+5. Migrate scheme to DB `npx prisma db push` for MingoDB or `npx prisma migrate dev` for MySQL.
+
+6. Run the development server:
 
    ```bash
    npm run dev

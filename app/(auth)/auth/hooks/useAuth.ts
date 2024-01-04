@@ -3,7 +3,7 @@ import { signIn } from 'next-auth/react';
 import { FieldValues } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
-import { post } from '@/app/utils/fetch';
+import { Method, makeRequest } from '@/app/utils/fetch';
 
 type ErrorCb = (type: string, data: any) => void;
 
@@ -29,9 +29,21 @@ export const useAuth = (errorCb?: ErrorCb) => {
     });
   };
 
+  const passwordReset = async (data: FieldValues) => {
+    setLoading(true);
+    try {
+      const res = await makeRequest('/api/reset', Method.POST, data);
+      setLoading(false);
+      return res;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
   const register = async (data: FieldValues) => {
     setLoading(true);
-    await post('/api/register', data);
+    await makeRequest('/api/register', Method.POST, data);
     router.push('/dashboard');
   };
 
@@ -68,5 +80,13 @@ export const useAuth = (errorCb?: ErrorCb) => {
       });
   };
 
-  return { loading, loadingGoogle, loadingFacebook, socialActions, register, signin };
+  return {
+    loading,
+    loadingGoogle,
+    loadingFacebook,
+    socialActions,
+    register,
+    signin,
+    passwordReset,
+  };
 };
