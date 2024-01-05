@@ -25,8 +25,7 @@ export async function POST(request: Request) {
 
     if (user) {
       const token = crypto.randomBytes(32).toString('hex');
-      const tokenExpiration = new Date();
-      tokenExpiration.setHours(tokenExpiration.getHours() + 1); // Token expires in 1 hour
+      const tokenExpiration = new Date(new Date().getTime() + 60 * 60000); // 60000 milliseconds in a minute
 
       await prisma.user.update({
         where: {

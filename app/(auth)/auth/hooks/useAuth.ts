@@ -29,6 +29,17 @@ export const useAuth = (errorCb?: ErrorCb) => {
     });
   };
 
+  const changePassword = async (data: FieldValues) => {
+    setLoading(true);
+    try {
+      await makeRequest('/api/change-password', Method.POST, data);
+      router.push('/auth');
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
   const passwordReset = async (data: FieldValues) => {
     setLoading(true);
     try {
@@ -88,5 +99,6 @@ export const useAuth = (errorCb?: ErrorCb) => {
     register,
     signin,
     passwordReset,
+    changePassword,
   };
 };
