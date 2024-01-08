@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 
 import prisma from '@/app/libs/prismaDb';
+import sendEmail from '@/app/utils/sendEmail';
 
 export async function POST(request: Request) {
   try {
@@ -13,18 +15,28 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
+    const token = crypto.randomBytes(32).toString('hex');
+    const tokenExpiration = new Date(new Date().getTime() + 30 * 24 * 60 * 60000); // 60000 milliseconds in a minute
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email,
         name,
         hashedPassword,
+        resetToken: token,
+        resetTokenExpiry: tokenExpiration,
       },
     });
 
-    return NextResponse.json(user);
+    // Send email
+    const link = `${process.env.APP_URL}/auth?token=${token}`;
+    sendEmail(email, 'Email confirmation', link);
+
+    return NextResponse.json(`Confirmation link is sent to ${email}. Please check your email!`, {
+      status: 200,
+    });
   } catch (error) {
     console.log(error, 'REGISTRATION ERROR');
-    return new NextResponse('Internal Error', { status: 500 });
+    return NextResponse.json('Internal Error', { status: 500 });
   }
 }

@@ -1,8 +1,9 @@
 'use client';
 import { useCallback, useState, useEffect } from 'react';
-import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
+import { useForm, FieldValues, SubmitHandler, set } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { motion, useAnimation } from 'framer-motion';
+import { useSearchParams } from 'next/navigation';
 
 import SocialLogin from './components/SocialLogin';
 import Divider from './components/Divider';
@@ -26,11 +27,16 @@ interface IShowMessage {
 
 type Variant = VARIANTS.login | VARIANTS.register | VARIANTS.reset;
 
+//! DASHBOARD HOOK FOR AUTH
+
 const Auth = () => {
   const [variant, setVariant] = useState<Variant>(VARIANTS.login);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<IShowMessage | null>(null);
+  const [bottomMessage, setBottomMessage] = useState<IShowMessage | null>(null);
   const controls = useAnimation();
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
 
   const slideOut = useCallback(async () => {
     await controls.start({ x: 500, opacity: 0, transition: { duration: 0.5 } });
@@ -42,6 +48,7 @@ const Auth = () => {
 
   useEffect(() => {
     slideIn();
+    setBottomMessage(null);
   }, [variant, slideIn]);
 
   const isLogin = useCallback(() => {
@@ -58,6 +65,7 @@ const Auth = () => {
     register,
     handleSubmit,
     setError,
+    setValue,
     formState: { errors },
     clearErrors,
   } = useForm<FieldValues>({
@@ -78,11 +86,39 @@ const Auth = () => {
     [slideOut, clearErrors],
   );
 
-  const { loading, register: registerUser, signin, passwordReset } = useAuth(setError);
+  const {
+    loading,
+    register: registerUser,
+    signin,
+    passwordReset,
+    activateUser,
+  } = useAuth(setError);
+
+  const confirmEmail = async (token: string) => {
+    try {
+      const data = await activateUser(token);
+      setBottomMessage({ type: 'success', message: data.message });
+      setValue('email', data.email);
+    } catch (error: any) {
+      setBottomMessage({ type: 'error', message: error?.message || 'Error' });
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      confirmEmail(token);
+    }
+  }, [token]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setBottomMessage(null);
     if (isRegister()) {
-      await registerUser(data);
+      try {
+        const message = await registerUser(data);
+        setShowMessage({ type: 'success', message });
+      } catch (error: any) {
+        setShowMessage({ type: 'error', message: error?.message || 'Error' });
+      }
     }
     if (isLogin()) {
       await signin(data);
@@ -198,6 +234,15 @@ const Auth = () => {
             </span>
           </div>
         </FadeIn>
+        {bottomMessage && (
+          <div
+            className={`text-sm leading-3 ${
+              bottomMessage?.type === 'error' ? 'text-rose-500' : 'text-lime-600'
+            }`}
+          >
+            {bottomMessage.message}
+          </div>
+        )}
       </form>
     </motion.div>
   );

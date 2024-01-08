@@ -29,6 +29,18 @@ export const useAuth = (errorCb?: ErrorCb) => {
     });
   };
 
+  const activateUser = async (token: string) => {
+    setLoading(true);
+    try {
+      const data = await makeRequest('/api/confirmation', Method.POST, { token });
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
   const changePassword = async (data: FieldValues) => {
     setLoading(true);
     try {
@@ -54,8 +66,14 @@ export const useAuth = (errorCb?: ErrorCb) => {
 
   const register = async (data: FieldValues) => {
     setLoading(true);
-    await makeRequest('/api/register', Method.POST, data);
-    router.push('/dashboard');
+    try {
+      const res = await makeRequest('/api/register', Method.POST, data);
+      setLoading(false);
+      return res;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   const signin = async (data: FieldValues) => {
@@ -66,21 +84,11 @@ export const useAuth = (errorCb?: ErrorCb) => {
     })
       .then((cb) => {
         if (cb?.error) {
-          if (cb.error === 'Incorect user') {
-            errorCb &&
-              errorCb('email', {
-                type: 'backend',
-                message: 'The provided credentials do not match our records.',
-              });
-          }
-          if (cb.error === 'Incorrect password') {
-            errorCb &&
-              errorCb('password', {
-                type: 'backend',
-                message:
-                  "Incorrect password. Please try again or reset your password if you've forgotten it.",
-              });
-          }
+          errorCb &&
+            errorCb('email', {
+              type: 'backend',
+              message: cb.error,
+            });
         }
         if (cb?.ok && !cb?.error) {
           router.push('/dashboard');
@@ -100,5 +108,6 @@ export const useAuth = (errorCb?: ErrorCb) => {
     signin,
     passwordReset,
     changePassword,
+    activateUser,
   };
 };
