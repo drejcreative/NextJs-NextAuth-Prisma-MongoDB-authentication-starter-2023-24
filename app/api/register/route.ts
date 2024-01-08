@@ -14,6 +14,16 @@ export async function POST(request: Request) {
       return NextResponse.json('Missing info', { status: 400 });
     }
 
+    // Check if the user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      // User already exists, handle accordingly
+      return NextResponse.json('User already exists with this email', { status: 400 });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const token = crypto.randomBytes(32).toString('hex');
     const tokenExpiration = new Date(new Date().getTime() + 30 * 24 * 60 * 60000); // 60000 milliseconds in a minute

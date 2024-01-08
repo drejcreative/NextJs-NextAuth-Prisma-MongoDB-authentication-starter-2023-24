@@ -6,10 +6,10 @@ interface IProps {
 
 const Loading = ({ size = 4 }: IProps) => {
   return (
-    <div role="status">
+    <div role="status" className="mr-2 flex align-middle">
       <svg
         aria-hidden="true"
-        className={`mr-2 h-${size} w-${size} animate-spin fill-blue-600 text-gray-200 dark:text-gray-600`}
+        className={`inline h-${size} w-${size} animate-spin fill-blue-600 text-gray-200 dark:text-gray-300`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

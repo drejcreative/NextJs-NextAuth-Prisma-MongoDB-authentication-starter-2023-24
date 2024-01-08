@@ -91,6 +91,14 @@ export const useAuth = (errorCb?: ErrorCb) => {
                 message: 'The provided credentials do not match our records.',
               });
           }
+          if (cb.error === 'google') {
+            errorCb &&
+              errorCb('email', {
+                type: 'backend',
+                message:
+                  'This email address is already used with google login, please use google login again!',
+              });
+          }
           if (cb.error === 'password') {
             errorCb &&
               errorCb('password', {

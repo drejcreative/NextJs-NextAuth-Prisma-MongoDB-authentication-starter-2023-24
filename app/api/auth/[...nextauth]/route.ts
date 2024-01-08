@@ -44,8 +44,12 @@ export const authOptions: AuthOptions = {
           },
         });
 
-        if (!user || !user?.hashedPassword) {
+        if (!user) {
           throw new Error('email');
+        }
+
+        if (!user?.hashedPassword) {
+          throw new Error('google');
         }
 
         if (!user.emailVerified) {
@@ -63,6 +67,41 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === 'google') {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email ?? undefined },
+        });
+
+        if (existingUser) {
+          console.log('existing user', existingUser);
+
+          // Link the Google account to the existing user
+          await prisma.account.upsert({
+            where: {
+              provider_providerAccountId: {
+                provider: 'google',
+                providerAccountId: account.providerAccountId,
+              },
+            },
+            create: {
+              userId: existingUser.id,
+              type: 'oauth',
+              provider: 'google',
+              providerAccountId: account.providerAccountId,
+            },
+            update: {
+              userId: existingUser.id,
+              type: 'oauth',
+              provider: 'google',
+              providerAccountId: account.providerAccountId,
+            },
+          });
+          return true; // Allow the sign-in
+        }
+      }
+      return true; // Allow sign-ins for other providers
+    },
     async session({ session, token, user }) {
       if (token.sub) {
         const user = await prisma.user.findUnique({
