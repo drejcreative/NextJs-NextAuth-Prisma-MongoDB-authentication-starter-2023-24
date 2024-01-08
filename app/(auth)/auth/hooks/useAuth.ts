@@ -84,11 +84,28 @@ export const useAuth = (errorCb?: ErrorCb) => {
     })
       .then((cb) => {
         if (cb?.error) {
-          errorCb &&
-            errorCb('email', {
-              type: 'backend',
-              message: cb.error,
-            });
+          if (cb.error === 'email') {
+            errorCb &&
+              errorCb('email', {
+                type: 'backend',
+                message: 'The provided credentials do not match our records.',
+              });
+          }
+          if (cb.error === 'password') {
+            errorCb &&
+              errorCb('password', {
+                type: 'backend',
+                message:
+                  "Incorrect password. Please try again or reset your password if you've forgotten it.",
+              });
+          }
+          if (cb.error === 'not_confirmed') {
+            errorCb &&
+              errorCb('email', {
+                type: 'backend',
+                message: 'Please confirm your email address to sign in.',
+              });
+          }
         }
         if (cb?.ok && !cb?.error) {
           router.push('/dashboard');

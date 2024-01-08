@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     });
 
     if (!user || !user?.resetTokenExpiry) {
-      return new NextResponse('Token invalid or expired', { status: 404 });
+      return NextResponse.json('Token invalid or expired', { status: 404 });
     }
 
     // Check if token is expired
@@ -47,6 +47,6 @@ export async function POST(request: Request) {
     return NextResponse.json(`Password updated successfully`, { status: 200 });
   } catch (error) {
     console.log(error, 'REGISTRATION ERROR');
-    return new NextResponse('Internal Error', { status: 500 });
+    return NextResponse.json('Internal Error', { status: 500 });
   }
 }

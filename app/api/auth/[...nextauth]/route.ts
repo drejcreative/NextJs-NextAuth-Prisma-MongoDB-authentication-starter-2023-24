@@ -45,20 +45,18 @@ export const authOptions: AuthOptions = {
         });
 
         if (!user || !user?.hashedPassword) {
-          throw new Error('The provided credentials do not match our records.');
+          throw new Error('email');
         }
 
         if (!user.emailVerified) {
           // We can skip this step and add verification on dashbaord later
-          throw new Error('Please confirm your email address to sign in.');
+          throw new Error('not_confirmed');
         }
 
         const isPasswordCorrect = await bcrypt.compare(credentials.password, user.hashedPassword);
 
         if (!isPasswordCorrect) {
-          throw new Error(
-            "Incorrect password. Please try again or reset your password if you've forgotten it.",
-          );
+          throw new Error('password');
         }
         return user;
       },

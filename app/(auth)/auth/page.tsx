@@ -27,8 +27,6 @@ interface IShowMessage {
 
 type Variant = VARIANTS.login | VARIANTS.register | VARIANTS.reset;
 
-//! DASHBOARD HOOK FOR AUTH
-
 const Auth = () => {
   const [variant, setVariant] = useState<Variant>(VARIANTS.login);
   const [showPassword, setShowPassword] = useState<boolean>(false);
