@@ -32,7 +32,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
   const activateUser = async (token: string) => {
     setLoading(true);
     try {
-      const data = await makeRequest('/api/confirmation', Method.POST, { token });
+      const data = await makeRequest('/api/auth/confirmation', Method.POST, { token });
       setLoading(false);
       return data;
     } catch (error) {
@@ -44,7 +44,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
   const changePassword = async (data: FieldValues) => {
     setLoading(true);
     try {
-      await makeRequest('/api/change-password', Method.POST, data);
+      await makeRequest('/api/auth/change-password', Method.POST, data);
       router.push('/auth');
     } catch (error) {
       setLoading(false);
@@ -55,7 +55,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
   const passwordReset = async (data: FieldValues) => {
     setLoading(true);
     try {
-      const res = await makeRequest('/api/reset', Method.POST, data);
+      const res = await makeRequest('/api/auth/reset', Method.POST, data);
       setLoading(false);
       return res;
     } catch (error) {
@@ -67,7 +67,7 @@ export const useAuth = (errorCb?: ErrorCb) => {
   const register = async (data: FieldValues) => {
     setLoading(true);
     try {
-      const res = await makeRequest('/api/register', Method.POST, data);
+      const res = await makeRequest('/api/auth/register', Method.POST, data);
       setLoading(false);
       return res;
     } catch (error) {
