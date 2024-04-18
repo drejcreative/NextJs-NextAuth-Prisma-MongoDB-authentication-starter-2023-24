@@ -15,3 +15,11 @@ export const passwordValidation = {
     message: 'Invalid password. Please ensure it meets all the requirements.',
   },
 };
+
+export const phoneValidation = {
+  required: 'Password is required',
+  pattern: {
+    value: /^(\+?|0)[\d\-\+\s]{9,15}$/,
+    message: 'Invalid Phone number. Please add a valid one.',
+  },
+};

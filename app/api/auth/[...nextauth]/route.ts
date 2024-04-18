@@ -109,6 +109,7 @@ export const authOptions: AuthOptions = {
         });
         if (session.user && user) {
           session.user.role = user.role;
+          session.user.image = user.image;
         }
       }
 

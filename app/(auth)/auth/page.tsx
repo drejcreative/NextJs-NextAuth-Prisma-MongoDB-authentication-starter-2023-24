@@ -2,7 +2,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useForm, FieldValues, SubmitHandler, set } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, useAnimationControls } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 
 import SocialLogin from './components/SocialLogin';
@@ -32,32 +32,9 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<IShowMessage | null>(null);
   const [bottomMessage, setBottomMessage] = useState<IShowMessage | null>(null);
-  const controls = useAnimation();
+  const controls = useAnimationControls();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
-
-  const slideOut = useCallback(async () => {
-    await controls.start({ x: 500, opacity: 0, transition: { duration: 0.5 } });
-  }, [controls]);
-
-  const slideIn = useCallback(() => {
-    controls.start({ x: 0, opacity: 1, transition: { duration: 0.5 } });
-  }, [controls]);
-
-  useEffect(() => {
-    slideIn();
-    setBottomMessage(null);
-  }, [variant, slideIn]);
-
-  const isLogin = useCallback(() => {
-    return variant === VARIANTS.login;
-  }, [variant]);
-  const isRegister = useCallback(() => {
-    return variant === VARIANTS.register;
-  }, [variant]);
-  const isReset = useCallback(() => {
-    return variant === VARIANTS.reset;
-  }, [variant]);
 
   const {
     register,
@@ -74,16 +51,6 @@ const Auth = () => {
     },
   });
 
-  const changeVariant = useCallback(
-    async (variant: Variant) => {
-      clearErrors();
-      setShowMessage(null);
-      await slideOut();
-      setVariant(variant);
-    },
-    [slideOut, clearErrors],
-  );
-
   const {
     loading,
     register: registerUser,
@@ -91,6 +58,26 @@ const Auth = () => {
     passwordReset,
     activateUser,
   } = useAuth(setError);
+
+  const slideOut = async () => {
+    await controls.start({ x: 500, opacity: 0, transition: { duration: 0.5 } });
+    slideIn();
+  };
+
+  const slideIn = () => {
+    controls.start({ x: 0, opacity: 1, transition: { duration: 0.5 } });
+  };
+
+  const isLogin = variant === VARIANTS.login;
+  const isRegister = variant === VARIANTS.register;
+  const isReset = variant === VARIANTS.reset;
+
+  const changeVariant = (variant: Variant) => {
+    clearErrors();
+    setShowMessage(null);
+    slideOut();
+    setVariant(variant);
+  };
 
   const confirmEmail = async (token: string) => {
     try {
@@ -110,7 +97,7 @@ const Auth = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setBottomMessage(null);
-    if (isRegister()) {
+    if (isRegister) {
       try {
         const message = await registerUser(data);
         setShowMessage({ type: 'success', message });
@@ -118,10 +105,10 @@ const Auth = () => {
         setShowMessage({ type: 'error', message: error?.message || 'Error' });
       }
     }
-    if (isLogin()) {
+    if (isLogin) {
       await signin(data);
     }
-    if (isReset()) {
+    if (isReset) {
       try {
         const message = await passwordReset(data);
         setShowMessage({ type: 'success', message });
@@ -132,117 +119,124 @@ const Auth = () => {
   };
 
   return (
-    <motion.div initial={{ opacity: 1, x: 0 }} animate={controls}>
-      <FadeIn delay={0.2} direction="left">
-        <SocialLogin />
-      </FadeIn>
-      <FadeIn delay={0.4} direction="left">
-        <Divider />
-      </FadeIn>
+    <div>
+      <motion.div initial={{ opacity: 1, x: 0 }} animate={controls}>
+        <FadeIn delay={0.2} direction="left">
+          <SocialLogin />
+        </FadeIn>
+        <FadeIn delay={0.4} direction="left">
+          <Divider />
+        </FadeIn>
 
-      <form action="" onSubmit={handleSubmit(onSubmit)} className="py-6">
-        <FadeIn delay={0.8} direction="left">
-          {isRegister() && (
-            <Input
-              label="Name"
-              register={register}
-              id="name"
-              type="text"
-              errors={errors}
-              className="mb-6"
-              validation={nameValidation}
-            />
-          )}
-
-          <Input
-            label="Email"
-            register={register}
-            id="email"
-            type="email"
-            className={`${showMessage ? '' : 'mb-6'}`}
-            errors={errors}
-            validation={emailValidation}
-          />
-
-          {showMessage && (
-            <div
-              className={`mb-6 mt-1 text-xs leading-3 ${
-                showMessage.type === 'error' ? 'text-rose-500' : 'text-lime-600'
-              }`}
-            >
-              {showMessage?.message}
-            </div>
-          )}
-
-          {!isReset() && (
-            <div className="relative flex flex-col items-end">
+        <form action="" onSubmit={handleSubmit(onSubmit)} className="py-6">
+          <FadeIn delay={0.8} direction="left">
+            {isRegister && (
               <Input
-                label="Password"
+                label="Name"
                 register={register}
-                type={showPassword ? 'text' : 'password'}
-                id="password"
+                id="name"
+                type="text"
                 errors={errors}
-                validation={isRegister() ? passwordValidation : {}}
+                className="mb-6"
+                validation={nameValidation}
               />
+            )}
 
-              <div>
-                {!showPassword ? (
-                  <FaEye
-                    className="absolute right-2 top-5 cursor-pointer"
-                    onClick={() => setShowPassword(true)}
-                  />
-                ) : (
-                  <FaEyeSlash
-                    className="absolute right-2 top-5 cursor-pointer"
-                    onClick={() => setShowPassword(false)}
-                  />
-                )}
-              </div>
+            <Input
+              label="Email"
+              register={register}
+              id="email"
+              type="email"
+              className={`${showMessage ? '' : 'mb-6'}`}
+              errors={errors}
+              validation={emailValidation}
+            />
 
-              {isRegister() && (
-                <p className="ml-2 mt-2 text-xs text-gray-500">
-                  Your password must be at least 8 characters long and include a mix of upper and
-                  lower case letters, numbers, and special characters.
-                </p>
-              )}
-
-              <span
-                className="-mr-3 w-max cursor-pointer p-3"
-                onClick={() => changeVariant(VARIANTS.reset)}
+            {showMessage && (
+              <div
+                className={`mb-6 mt-1 text-xs leading-3 ${
+                  showMessage.type === 'error' ? 'text-rose-500' : 'text-lime-600'
+                }`}
               >
-                <span className="text-sm tracking-wide text-blue-600">Forgot password ?</span>
+                {showMessage?.message}
+              </div>
+            )}
+
+            {!isReset && (
+              <div className="relative flex flex-col items-end">
+                <Input
+                  label="Password"
+                  register={register}
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  errors={errors}
+                  validation={isRegister ? passwordValidation : {}}
+                />
+
+                <div>
+                  {!showPassword ? (
+                    <FaEye
+                      className="absolute right-2 top-5 cursor-pointer"
+                      onClick={() => setShowPassword(true)}
+                    />
+                  ) : (
+                    <FaEyeSlash
+                      className="absolute right-2 top-5 cursor-pointer"
+                      onClick={() => setShowPassword(false)}
+                    />
+                  )}
+                </div>
+
+                {isRegister && (
+                  <p className="ml-2 mt-2 text-xs text-gray-500">
+                    Your password must be at least 8 characters long and include a mix of upper and
+                    lower case letters, numbers, and special characters.
+                  </p>
+                )}
+
+                <span
+                  className="-mr-3 w-max cursor-pointer p-3"
+                  onClick={() => changeVariant(VARIANTS.reset)}
+                >
+                  <span className="text-sm tracking-wide text-blue-600">Forgot password ?</span>
+                </span>
+              </div>
+            )}
+          </FadeIn>
+
+          <FadeIn delay={0.8} direction="left">
+            <Button
+              type="submit"
+              variant="ai"
+              size="full"
+              disabled={loading || showMessage?.type === 'success'}
+            >
+              {loading && <Loading className="mr-2" />}
+              {(isLogin && VARIANTS.login) ||
+                (isRegister && VARIANTS.register) ||
+                (isReset && VARIANTS.reset)}
+            </Button>
+            <div className="-ml-3 w-max p-3">
+              <span
+                onClick={() => changeVariant(isLogin ? VARIANTS.register : VARIANTS.login)}
+                className="cursor-pointer text-sm tracking-wide text-blue-600"
+              >
+                {isLogin ? 'Create new account' : 'Login to your account'}
               </span>
             </div>
-          )}
-        </FadeIn>
-
-        <FadeIn delay={0.8} direction="left">
-          <Button type="submit" size="full" disabled={loading || showMessage?.type === 'success'}>
-            {loading && <Loading />}
-            {(isLogin() && VARIANTS.login) ||
-              (isRegister() && VARIANTS.register) ||
-              (isReset() && VARIANTS.reset)}
-          </Button>
-          <div className="-ml-3 w-max p-3">
-            <span
-              onClick={() => changeVariant(isLogin() ? VARIANTS.register : VARIANTS.login)}
-              className="cursor-pointer text-sm tracking-wide text-blue-600"
+          </FadeIn>
+          {bottomMessage && (
+            <div
+              className={`text-sm leading-3 ${
+                bottomMessage?.type === 'error' ? 'text-rose-500' : 'text-lime-600'
+              }`}
             >
-              {isLogin() ? 'Create new account' : 'Login to your account'}
-            </span>
-          </div>
-        </FadeIn>
-        {bottomMessage && (
-          <div
-            className={`text-sm leading-3 ${
-              bottomMessage?.type === 'error' ? 'text-rose-500' : 'text-lime-600'
-            }`}
-          >
-            {bottomMessage.message}
-          </div>
-        )}
-      </form>
-    </motion.div>
+              {bottomMessage.message}
+            </div>
+          )}
+        </form>
+      </motion.div>
+    </div>
   );
 };
 
