@@ -89,9 +89,11 @@ const Auth = () => {
     }
   };
 
-  if (token) {
-    confirmEmail(token);
-  }
+  useEffect(() => {
+    if (token) {
+      confirmEmail(token);
+    }
+  }, [token]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setBottomMessage(null);
