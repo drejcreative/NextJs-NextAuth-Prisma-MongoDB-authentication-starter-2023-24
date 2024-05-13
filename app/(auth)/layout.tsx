@@ -1,6 +1,5 @@
 import BottomText from './auth/components/BottomText';
 import Logo from './auth/components/Logo';
-import Overlay from './auth/components/overlay';
 import Video from './auth/components/video';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
